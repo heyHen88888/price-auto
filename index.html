@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="price-box">
+        <h1>今日報價</h1>
+        <h1 id="price"></h1>
+    </div>
+</body>
+
+<script>
+
+
+// h1 Tag
+let priceText = document.querySelector('#price');
+
+
+let priceNew = 0;
+let priceDataArr = [];
+
+
+function getUsdtPrice(){
+
+    fetch('https://cdn.bitopro.com/production_curvy.json')
+    .then(function(response) {
+        console.log('response1', response)
+        return response.json();
+    })
+    .then(function(myJson) {
+        let priceArr = myJson['USDT_TWD'];
+        let newestPrice = [...priceArr].slice(9)
+
+        let sumOfNewest = 0;
+        newestPrice.forEach((price)=>{
+            sumOfNewest += price;
+        })
+
+        priceNew = (sumOfNewest/3).toFixed(4);
+
+        priceText.innerHTML = priceNew;
+
+    });
+}
+
+getUsdtPrice();
+
+setInterval(()=>{
+    getUsdtPrice();
+}, 60000)
+
+</script>
+
+<style>
+
+    *{
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+    }
+
+    html, body{
+        width: 100%;
+        padding: 5px;
+    }
+    .price-box{
+        text-align: center;
+        width: 100%;
+        height: 100vh;
+        font-size: 30px;
+        color: rgb(213, 223, 36);
+
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-image: url("https://ace.io/static/a1a5e3c993e7e80795f13f51494004b8/50587/first-banner-cn.jpg");
+    }
+</style>
+</html>
